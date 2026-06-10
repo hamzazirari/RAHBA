@@ -11,15 +11,30 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            
+            // Informations de base
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->rememberToken();
+            $table->string('name');
+            $table->string('phone')->nullable();
+            
+            // Rôle et statut
+            $table->enum('role', ['admin', 'client', 'vendor'])->default('client');
+            $table->boolean('is_active')->default(true);
+            
+            // Type polymorphe (pour supporter différents types d'utilisateurs)
+            $table->string('type')->nullable(); // 'admin', 'client', 'vendor'
+            
+            // Timestamps
             $table->timestamps();
+            $table->softDeletes();
+            
+            
         });
+    
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
