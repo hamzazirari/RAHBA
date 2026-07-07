@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Public\{HomeController, ProductController, VendorShopController};
 use App\Http\Controllers\Client\{CartController, CheckoutController, OrderController, ReviewController, ClientProfileController};
+use App\Http\Controllers\Vendor\{VendorDashboardController, VendorProductController, VendorOrderController, VendorProfileController};
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -60,5 +61,39 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile/password', [ClientProfileController::class, 'updatePassword'])->name('profile.password.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::middleware(['auth', 'verified', 'role:vendor'])
+    ->prefix('vendor')
+    ->name('vendor.')
+    ->group(function () {
+        Route::get('/dashboard', [VendorDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard/stats', [VendorDashboardController::class, 'getStats'])->name('dashboard.stats');
+        Route::get('/dashboard/sales-chart', [VendorDashboardController::class, 'getSalesChart'])->name('dashboard.sales-chart');
+        Route::get('/dashboard/recent-orders', [VendorDashboardController::class, 'getRecentOrders'])->name('dashboard.recent-orders');
+        Route::get('/dashboard/top-products', [VendorDashboardController::class, 'getTopProducts'])->name('dashboard.top-products');
+
+        Route::get('/products', [VendorProductController::class, 'index'])->name('products.index');
+        Route::get('/products/create', [VendorProductController::class, 'create'])->name('products.create');
+        Route::post('/products', [VendorProductController::class, 'store'])->name('products.store');
+        Route::get('/products/search/{keyword}', [VendorProductController::class, 'search'])->name('products.search');
+        Route::get('/products/{productId}/edit', [VendorProductController::class, 'edit'])->name('products.edit');
+        Route::put('/products/{productId}', [VendorProductController::class, 'update'])->name('products.update');
+        Route::delete('/products/{productId}', [VendorProductController::class, 'delete'])->name('products.delete');
+        Route::patch('/products/{productId}/toggle-active', [VendorProductController::class, 'toggleActive'])->name('products.toggle-active');
+
+        Route::get('/orders', [VendorOrderController::class, 'index'])->name('orders.index');
+        Route::get('/orders/filter/{status}', [VendorOrderController::class, 'filter'])->name('orders.filter');
+        Route::get('/orders/{orderId}', [VendorOrderController::class, 'show'])->name('orders.show');
+        Route::patch('/orders/{orderId}/status/{status?}', [VendorOrderController::class, 'updateStatus'])->name('orders.update-status');
+        Route::get('/orders/{orderId}/export', [VendorOrderController::class, 'export'])->name('orders.export');
+        Route::get('/orders/{orderId}/client-info', [VendorOrderController::class, 'getClientInfo'])->name('orders.client-info');
+
+        Route::get('/profile', [VendorProfileController::class, 'show'])->name('profile.show');
+        Route::get('/profile/edit', [VendorProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [VendorProfileController::class, 'update'])->name('profile.update');
+        Route::get('/profile/password', [VendorProfileController::class, 'changePassword'])->name('profile.password');
+        Route::patch('/profile/password', [VendorProfileController::class, 'updatePassword'])->name('profile.password.update');
+        Route::get('/profile/stats', [VendorProfileController::class, 'getVendorStats'])->name('profile.stats');
+    });
 
 require __DIR__.'/auth.php';

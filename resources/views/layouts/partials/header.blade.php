@@ -26,10 +26,11 @@
                 @endauth
                 
                 <span class="h-6 w-px bg-slate-200"></span>
-                <a href="{{ route('cart.view') }}" class="relative p-2.5 text-slate-600 hover:text-amber-600 transition rounded-xl hover:bg-slate-50">
+                <a href="{{ route('cart.view') }}" class="relative inline-flex items-center gap-2 px-3 py-2.5 text-sm font-bold text-slate-700 hover:text-amber-600 transition rounded-xl hover:bg-slate-50">
                     <i class="fa-solid fa-basket-shopping text-xl"></i>
+                    <span class="hidden sm:inline">Mon Panier</span>
                     <span class="absolute top-1 right-1 bg-amber-600 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
-                        {{ auth()->check() ? \App\Models\Cart::where('user_id', auth()->id())->first()?->items()->count() ?? 0 : 0 }}
+                        {{ auth()->check() ? \App\Models\Cart::where('user_id', auth()->id())->first()?->items()->sum('quantity') ?? 0 : 0 }}
                     </span>
                 </a>
             </div>

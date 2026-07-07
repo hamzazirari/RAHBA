@@ -9,7 +9,11 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'category_id', 'name', 'description', 'price', 'stock', 'image_url'];
+    protected $fillable = ['user_id', 'category_id', 'name', 'description', 'price', 'stock', 'image_url', 'is_active'];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
 
     // Le produit appartient à un vendeur (User)
     public function vendor()

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
 
 class ClientProfileController extends Controller
@@ -13,7 +14,7 @@ class ClientProfileController extends Controller
     {
         $user = $request->user()->load('orders');
 
-        return view('profile.edit', compact('user'));
+        return view('client.profile', compact('user'));
     }
 
     public function edit(Request $request)
@@ -28,7 +29,22 @@ class ClientProfileController extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $request->user()->id],
             'phone' => ['nullable', 'string', 'max:30'],
             'address' => ['nullable', 'string', 'max:500'],
+            'profile_photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'shop_name' => ['nullable', 'required_if:role,vendor', 'string', 'max:255'],
+            'shop_description' => ['nullable', 'required_if:role,vendor', 'string', 'max:1000'],
         ]);
+
+        if ($request->user()->role !== 'vendor') {
+            unset($data['shop_name'], $data['shop_description']);
+        }
+
+        if ($request->hasFile('profile_photo')) {
+            if ($request->user()->profile_photo) {
+                Storage::disk('public')->delete($request->user()->profile_photo);
+            }
+
+            $data['profile_photo'] = $request->file('profile_photo')->store('profile-photos', 'public');
+        }
 
         $request->user()->update($data);
 

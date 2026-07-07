@@ -108,7 +108,7 @@
             <div class="flex flex-col sm:flex-row gap-3 pt-4">
                 <button 
                     type="submit" 
-                    class="flex-1 py-3 bg-gradient-to-r from-amber-600 to-orange-600 text-white font-bold rounded-lg hover:from-amber-700 hover:to-orange-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 group"
+                    class="flex-1 py-3 bg-orange-500 from-amber-600 to-orange-600 text-black font-bold rounded-lg hover:from-amber-700 hover:to-orange-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 group"
                 >
                     <i class="fa-solid fa-magnifying-glass group-hover:scale-110 transition-transform"></i>
                     Rechercher
@@ -117,7 +117,7 @@
                 @if(request('search') || request('min_price') || request('max_price') || request('category') || request('sort'))
                     <a 
                         href="{{ route('home') }}" 
-                        class="flex-1 py-3 bg-slate-100 text-slate-700 font-bold rounded-lg hover:bg-slate-200 transition-all flex items-center justify-center gap-2"
+                        class="flex-1 py-3 bg-orange-400 text-slate-700 font-bold rounded-lg hover:bg-orange-600 transition-all flex items-center justify-center gap-2"
                     >
                         <i class="fa-solid fa-redo"></i>
                         Réinitialiser
@@ -265,22 +265,6 @@
         @empty
             <p class="text-sm text-slate-500 col-span-full text-center py-12">Aucun produit en vedette actuellement.</p>
         @endforelse
-    </div>
-</section>
-
-<!-- ===== SECTION CTA (Appel à l'action) ===== -->
-<section class="bg-gradient-to-r from-amber-600 to-orange-600 py-16 mt-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-        <h3 class="text-3xl sm:text-4xl font-bold mb-4">Devenez vendeur</h3>
-        <p class="text-lg text-amber-100 mb-8 max-w-2xl mx-auto">
-            Partagez vos produits artisanaux avec des milliers de clients. Inscrivez-vous gratuitement et commencez à vendre aujourd'hui.
-        </p>
-        <a 
-            href="{{ route('register') }}" 
-            class="inline-block px-8 py-3 bg-white text-amber-600 font-bold rounded-lg hover:bg-slate-100 transition-colors shadow-lg"
-        >
-            S'inscrire en tant que vendeur
-        </a>
     </div>
 </section>
 

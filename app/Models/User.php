@@ -25,6 +25,7 @@ class User extends Authenticatable
         'role',
         'shop_name',
         'shop_description',
+        'profile_photo',
         'is_active',
     ];
 

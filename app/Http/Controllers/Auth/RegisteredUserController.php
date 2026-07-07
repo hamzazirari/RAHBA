@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
@@ -36,11 +37,16 @@ class RegisteredUserController extends Controller
         'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
         'phone' => ['required', 'string', 'max:20'],
         'role' => ['required', 'string', 'in:client,vendor'],
+        'profile_photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         
         // Les champs boutique sont obligatoires uniquement si le rôle sélectionné est 'vendor'
         'shop_name' => ['required_if:role,vendor', 'nullable', 'string', 'max:255'],
         'shop_description' => ['required_if:role,vendor', 'nullable', 'string'],
     ]);
+
+    $photoPath = $request->hasFile('profile_photo')
+        ? $request->file('profile_photo')->store('profile-photos', 'public')
+        : null;
 
     $user = User::create([
         'name' => $request->name,
@@ -48,6 +54,7 @@ class RegisteredUserController extends Controller
         'password' => \Illuminate\Support\Facades\Hash::make($request->password),
         'phone' => $request->phone,
         'role' => $request->role,
+        'profile_photo' => $photoPath,
         'is_active' => true, // Utilisateur actif par défaut selon ton diagramme
         
         // On n'enregistre la boutique que si c'est un vendeur

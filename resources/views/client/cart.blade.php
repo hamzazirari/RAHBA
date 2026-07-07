@@ -1,4 +1,4 @@
--- Active: 1777018450648@@127.0.0.1@3306
+
 @extends('layouts.app')
 
 @section('title', 'Mon Panier')

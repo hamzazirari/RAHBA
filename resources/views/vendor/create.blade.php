@@ -4,83 +4,72 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-    
-    <!-- En-tête -->
     <div class="mb-8">
-        <a href="#" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-amber-600 transition">
-            <i class="fa-solid fa-arrow-left text-xs"></i> Retour à mes produits
+        <a href="{{ route('vendor.products.index') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-amber-600 transition">
+            <i class="fa-solid fa-arrow-left text-xs"></i> Retour a mes produits
         </a>
         <h1 class="text-3xl font-black text-slate-900 tracking-tight mt-3">Ajouter un nouveau produit</h1>
-        <p class="text-sm text-slate-500 mt-1">Remplissez les détails ci-dessous pour publier votre produit sur le catalogue.</p>
+        <p class="text-sm text-slate-500 mt-1">Publiez un produit dans votre boutique.</p>
     </div>
 
-    <!-- Formulaire d'ajout -->
-    <form action="#" method="POST" enctype="multipart/form-data" class="space-y-6">
+    <form action="{{ route('vendor.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            <!-- Upload d'image -->
-            <div class="md:col-span-1 space-y-4">
+            <div class="md:col-span-1">
                 <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-xs">
                     <label class="block text-xs font-bold text-slate-700 uppercase mb-3">Image du produit</label>
-                    <div class="border-2 border-dashed border-slate-200 hover:border-amber-400 rounded-xl p-4 transition text-center bg-slate-50/50 cursor-pointer relative group flex flex-col items-center justify-center min-h-[200px]">
-                        <input type="file" name="image" required accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                        <div class="space-y-2 pointer-events-none">
-                            <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-400 group-hover:text-amber-600 transition"></i>
-                            <span class="block text-xs font-bold text-slate-700">Glisser ou sélectionner</span>
-                            <span class="block text-[10px] text-slate-400">PNG, JPG ou WEBP jusqu'à 5Mo</span>
-                        </div>
-                    </div>
+                    <label class="border-2 border-dashed border-slate-200 hover:border-amber-400 rounded-xl p-4 transition text-center bg-slate-50/50 cursor-pointer flex flex-col items-center justify-center min-h-[200px]">
+                        <input type="file" name="image" required accept="image/jpeg,image/png,image/webp" class="hidden">
+                        <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-400 mb-2"></i>
+                        <span class="block text-xs font-bold text-slate-700">Choisir une image</span>
+                        <span class="block text-[10px] text-slate-400">JPG, PNG ou WEBP jusqu'a 5Mo</span>
+                    </label>
+                    @error('image') <p class="text-xs text-rose-600 mt-2">{{ $message }}</p> @enderror
                 </div>
             </div>
 
-            <!-- Informations détaillées -->
             <div class="md:col-span-2 space-y-6">
                 <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs space-y-5">
-                    
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Nom du produit</label>
-                        <input type="text" name="name" required placeholder="Ex: Clavier Mécanique Pro RGB" 
-                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition outline-hidden">
+                        <input type="text" name="name" value="{{ old('name') }}" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition outline-hidden">
+                        @error('name') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Catégorie</label>
-                        <select name="category" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition outline-hidden">
-                            <option value="">Sélectionner une catégorie</option>
-                            <option value="electronics">Électronique</option>
-                            <option value="fashion">Mode & Vêtements</option>
-                            <option value="food">Alimentation & Épicerie</option>
-                            <option value="crafts">Artisanat local</option>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Categorie</label>
+                        <select name="category_id" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition outline-hidden">
+                            <option value="">Selectionner une categorie</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>{{ $category->name }}</option>
+                            @endforeach
                         </select>
+                        @error('category_id') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Description du produit</label>
-                        <textarea name="description" rows="5" required placeholder="Décrivez votre produit..." 
-                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition outline-hidden resize-none"></textarea>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Description</label>
+                        <textarea name="description" rows="5" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition outline-hidden resize-none">{{ old('description') }}</textarea>
+                        @error('description') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Prix (DH)</label>
-                            <div class="relative">
-                                <input type="number" step="0.01" name="price" required placeholder="0.00" 
-                                    class="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition outline-hidden font-semibold">
-                                <div class="absolute inset-y-0 right-0 pr-4 flex items-center text-xs font-bold text-slate-400 pointer-events-none">DH</div>
-                            </div>
+                            <input type="number" step="0.01" name="price" value="{{ old('price') }}" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition outline-hidden font-semibold">
+                            @error('price') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Quantité en stock</label>
-                            <input type="number" name="stock" required placeholder="Ex: 10" 
-                                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition outline-hidden font-semibold">
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Stock</label>
+                            <input type="number" name="stock" value="{{ old('stock') }}" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition outline-hidden font-semibold">
+                            @error('stock') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                         </div>
                     </div>
                 </div>
 
                 <div class="flex items-center justify-end gap-3">
-                    <button type="button" class="px-5 py-3 border border-slate-200 bg-white text-slate-600 font-bold rounded-xl text-sm hover:bg-slate-50 transition cursor-pointer">Annuler</button>
+                    <a href="{{ route('vendor.products.index') }}" class="px-5 py-3 border border-slate-200 bg-white text-slate-600 font-bold rounded-xl text-sm hover:bg-slate-50 transition">Annuler</a>
                     <button type="submit" class="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl text-sm transition shadow-xs cursor-pointer">
                         <i class="fa-solid fa-circle-check mr-1.5"></i> Mettre en vente
                     </button>
