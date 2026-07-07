@@ -15,6 +15,19 @@ class Product extends Model
         'is_active' => 'boolean',
     ];
 
+    public function getImageSrcAttribute()
+    {
+        if (!$this->image_url) {
+            return 'https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=600';
+        }
+
+        if (str_starts_with($this->image_url, 'http://') || str_starts_with($this->image_url, 'https://')) {
+            return $this->image_url;
+        }
+
+        return asset($this->image_url);
+    }
+
     // Le produit appartient à un vendeur (User)
     public function vendor()
     {

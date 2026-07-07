@@ -76,13 +76,13 @@
                             </td>
                             <td class="py-4 px-6 text-right space-x-1 whitespace-nowrap">
                                 <a href="{{ route('vendor.products.edit', $product->id) }}" class="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-slate-200 text-slate-600 hover:text-amber-600 hover:border-amber-200 transition bg-white shadow-xs">
-                                    <i class="fa-solid fa-pen text-xs"></i>
+                                    <i class="fa-solid fa-pen-to-square text-xs"></i>
                                 </a>
                                 <form action="{{ route('vendor.products.delete', $product->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
                                     <button class="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-slate-200 text-slate-400 hover:text-rose-600 hover:border-rose-200 transition bg-white shadow-xs cursor-pointer">
-                                        <i class="fa-solid fa-trash-can text-xs"></i>
+                                        <i class="fa-solid fa-trash text-xs"></i>
                                     </button>
                                 </form>
                             </td>

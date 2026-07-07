@@ -180,7 +180,7 @@
                 <!-- IMAGE -->
                 <div class="relative bg-slate-100 aspect-square w-full overflow-hidden">
                     <img 
-                        src="{{ $product->image_url ?? 'https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=500' }}" 
+                        src="{{ $product->image_src }}" 
                         alt="{{ $product->name }}" 
                         class="w-full h-full object-cover group-hover:scale-110 transition duration-500"
                     >

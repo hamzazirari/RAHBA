@@ -20,6 +20,12 @@
             <div class="flex items-center gap-3">
                 @auth
                     <a href="{{ route('profile.show') }}" class="text-sm font-bold text-slate-700 hover:text-amber-600 px-4 py-2.5 border border-slate-200 rounded-xl transition">Mon Profil</a>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="text-sm font-bold text-rose-600 hover:text-white hover:bg-rose-600 px-4 py-2.5 border border-rose-100 rounded-xl transition cursor-pointer">
+                            <i class="fa-solid fa-arrow-right-from-bracket mr-1.5"></i> Deconnexion
+                        </button>
+                    </form>
                 @else
                     <a href="{{ route('login') }}" class="text-sm font-bold text-slate-700 hover:text-amber-600 px-3 py-2.5 transition">Connexion</a>
                     <a href="{{ route('register') }}" class="text-sm font-bold bg-amber-600 text-white px-4 py-2.5 rounded-xl hover:bg-amber-700 transition">Inscription</a>

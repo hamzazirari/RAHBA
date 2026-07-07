@@ -7,7 +7,7 @@
     <div class="lg:grid lg:grid-cols-2 lg:gap-x-8 bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-xs">
         
         <div class="w-full aspect-square bg-slate-50 rounded-xl overflow-hidden border border-slate-100">
-            <img src="{{ $product->image_url ?? 'https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=600' }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+            <img src="{{ $product->image_src }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
         </div>
 
         <div class="mt-10 lg:mt-0 lg:pl-4 flex flex-col">

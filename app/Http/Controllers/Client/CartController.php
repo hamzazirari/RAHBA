@@ -27,6 +27,14 @@ class CartController extends Controller
     {
         $product = Product::findOrFail($productId);
 
+        if (Auth::user()->role !== 'client') {
+            return redirect()->route('products.show', $product->id)->with('error', 'Seuls les clients peuvent ajouter des produits au panier.');
+        }
+
+        if (!$product->is_active) {
+            return back()->with('error', 'Ce produit n est pas disponible.');
+        }
+
         if ($product->stock <= 0) {
             return back()->with('error', 'Ce produit est en rupture de stock.');
         }
@@ -42,7 +50,7 @@ class CartController extends Controller
         $item->save();
         $this->syncCartTotals($cart);
 
-        return back()->with('success', 'Produit ajoute au panier.');
+        return redirect()->route('cart.view')->with('success', 'Produit ajoute au panier.');
     }
 
     public function updateQuantity(Request $request, $cartItemId)
@@ -108,7 +116,7 @@ class CartController extends Controller
         return $items->mapWithKeys(function ($item) {
             return [$item->id => [
                 'name' => $item->product->name,
-                'image_url' => $item->product->image_url,
+                'image_url' => $item->product->image_src,
                 'price' => $item->product->price,
                 'quantity' => $item->quantity,
                 'shop_name' => $item->product->user->shop_name ?? 'Vendeur Rahba',

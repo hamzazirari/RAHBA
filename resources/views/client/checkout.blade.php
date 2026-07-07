@@ -67,7 +67,7 @@
             <div class="space-y-3 max-h-60 overflow-y-auto pr-2 mb-4">
                 @forelse($cartItems as $item)
                     <div class="flex items-center gap-3 py-1">
-                        <img src="{{ $item->product->image_url ?? 'https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=100' }}" class="w-12 h-12 rounded-lg object-cover bg-slate-50 border">
+                        <img src="{{ $item->product->image_src }}" class="w-12 h-12 rounded-lg object-cover bg-slate-50 border">
                         <div class="flex-1 min-w-0">
                             <h4 class="text-xs font-bold text-slate-800 truncate">{{ $item->product->name }}</h4>
                             <span class="text-[11px] text-slate-400">Quantite: {{ $item->quantity }}</span>

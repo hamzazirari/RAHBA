@@ -21,6 +21,7 @@ class ProductController extends Controller
     {
         $product = Product::with(['category', 'user', 'reviews.user'])
             ->withAvg('reviews', 'rating')
+            ->where('is_active', true)
             ->findOrFail($id);
 
         return view('public.show', compact('product'));
@@ -51,6 +52,7 @@ class ProductController extends Controller
     {
         return Product::with(['category', 'user'])
             ->withAvg('reviews', 'rating')
+            ->where('is_active', true)
             ->when($request->filled('search'), fn ($query) => $query->where('name', 'like', '%' . $request->search . '%'))
             ->when($request->filled('category'), fn ($query) => $query->where('category_id', $request->category))
             ->when($request->filled('categories'), function ($query) use ($request) {

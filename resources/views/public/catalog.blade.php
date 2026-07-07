@@ -53,7 +53,7 @@
                 @forelse($products as $product)
                     <div class="group bg-white border border-slate-100 rounded-xl overflow-hidden shadow-xs hover:shadow-md transition flex flex-col">
                         <div class="relative bg-slate-100 aspect-square w-full overflow-hidden">
-                            <img src="{{ $product->image_url ?? 'https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=500' }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                            <img src="{{ $product->image_src }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
                         </div>
                         <div class="p-5 flex flex-col flex-grow">
                             <a href="{{ route('products.show', $product->id) }}" class="text-sm font-semibold text-slate-800 hover:text-amber-600 line-clamp-2 mb-2 transition">

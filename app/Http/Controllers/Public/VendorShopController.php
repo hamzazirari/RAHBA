@@ -45,6 +45,7 @@ class VendorShopController extends Controller
         return Product::with(['category', 'reviews'])
             ->withAvg('reviews', 'rating')
             ->where('user_id', $vendorId)
+            ->where('is_active', true)
             ->when($request->filled('search'), fn ($query) => $query->where('name', 'like', '%' . $request->search . '%'))
             ->when($request->filled('category'), fn ($query) => $query->where('category_id', $request->category))
             ->when($request->filled('min_price'), fn ($query) => $query->where('price', '>=', $request->min_price))
