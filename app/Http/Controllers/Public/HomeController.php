@@ -3,37 +3,33 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Category, Product};
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
-class HomeController extends Controller 
+class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        $categories = Category::all(); 
+        $categories = Category::orderBy('name')->get();
 
-        $query = Product::query();
+        $featuredProducts = Product::with(['category', 'user'])
+            ->withAvg('reviews', 'rating')
+            ->when($request->filled('search'), fn ($query) => $query->where('name', 'like', '%' . $request->search . '%'))
+            ->when($request->filled('category'), fn ($query) => $query->where('category_id', $request->category))
+            ->when($request->filled('min_price'), fn ($query) => $query->where('price', '>=', $request->min_price))
+            ->when($request->filled('max_price'), fn ($query) => $query->where('price', '<=', $request->max_price))
+            ->when($request->sort === 'price_asc', fn ($query) => $query->orderBy('price'))
+            ->when($request->sort === 'price_desc', fn ($query) => $query->orderByDesc('price'))
+            ->when($request->sort === 'newest' || !$request->filled('sort'), fn ($query) => $query->latest())
+            ->take(8)
+            ->get();
 
-        if ($request->has('category')) {
-            $query->whereHas('category', function($q) use ($request) {
-                $q->where('slug', $request->category);
-            });
-        }
-
-        $products = $query->paginate(12); // Utilise paginate au lieu de get() pour éviter de surcharger la page
-
-        return view('public.catalog', compact('products', 'categories'));
+        return view('public.home', compact('categories', 'featuredProducts'));
     }
 
-    public function search(Request $request) 
+    public function search(Request $request)
     {
-        // 1. Récupère les catégories aussi ici pour ne pas avoir l'erreur
-        $categories = Category::all();
-
-        // 2. Recherche
-        $products = Product::where('name', 'like', '%'.$request->query('search').'%')->paginate(12);
-        
-        // 3. Passe bien les deux variables à la vue
-        return view('public.catalog', compact('products', 'categories'));
+        return redirect()->route('products.index', $request->only('search'));
     }
 }

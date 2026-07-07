@@ -15,8 +15,8 @@
             
             <p class="mt-2 text-sm text-slate-500">
                 Vendu par : 
-                <a href="{{ route('vendors.show', $product->user_id) }}" class="text-amber-600 font-semibold hover:underline">
-                    {{ $product->user->shopName ?? 'Boutique Inconnue' }}
+                <a href="{{ route('vendor.shop', $product->user_id) }}" class="text-amber-600 font-semibold hover:underline">
+                    {{ $product->user->shop_name ?? 'Boutique Inconnue' }}
                 </a>
             </p>
 

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cart extends Model
 {
+    public $timestamps = false;
+
     protected $fillable = ['user_id', 'total_items', 'total_price'];
 
     // Le panier appartient à un client (User)

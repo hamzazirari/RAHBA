@@ -65,7 +65,7 @@
                 <div class="text-center py-16 bg-white rounded-2xl border border-slate-100 shadow-xs">
                     <i class="fa-solid fa-basket-shopping text-slate-200 text-6xl mb-4"></i>
                     <p class="text-base text-slate-500 font-medium">Votre panier est vide.</p>
-                    <a href="{{ route('products::index') }}" class="mt-4 inline-flex items-center bg-amber-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-amber-700 transition">
+                    <a href="{{ route('products.index') }}" class="mt-4 inline-flex items-center bg-amber-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-amber-700 transition">
                         Retourner au catalogue
                     </a>
                 </div>
@@ -92,7 +92,7 @@
                 </div>
 
                 <div class="mt-6">
-                    <a href="{{ route('checkout.index') }}" class="block w-full bg-amber-600 hover:bg-amber-700 text-white text-center font-bold py-3.5 px-4 rounded-xl transition shadow-xs cursor-pointer">
+                    <a href="{{ route('checkout.show') }}" class="block w-full bg-amber-600 hover:bg-amber-700 text-white text-center font-bold py-3.5 px-4 rounded-xl transition shadow-xs cursor-pointer">
                         Passer à la caisse <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
                     </a>
                 </div>
