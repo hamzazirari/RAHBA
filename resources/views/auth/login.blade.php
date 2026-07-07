@@ -44,5 +44,9 @@
             Se connecter
         </button>
     </form>
+    <div class="mt-6 text-center text-sm text-slate-600">
+    Pas encore de compte ? 
+    <a href="{{ route('register') }}" class="text-amber-600 font-bold hover:underline">Inscrivez-vous</a>
+</div>
 </div>
 @endsection

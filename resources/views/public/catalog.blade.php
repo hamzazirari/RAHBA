@@ -79,7 +79,7 @@
                         <i class="fa-solid fa-box-open text-slate-300 text-4xl mb-3"></i>
                         <p class="text-sm text-slate-500">Aucun produit ne correspond à vos critères.</p>
                     </div>
-                @empty
+                
                 @endforelse
             </div>
 

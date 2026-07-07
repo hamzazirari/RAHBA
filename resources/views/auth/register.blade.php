@@ -95,5 +95,9 @@
             Créer mon compte
         </button>
     </form>
+    <div class="mt-6 text-center text-sm text-slate-600">
+    Déjà un compte ? 
+    <a href="{{ route('login') }}" class="text-amber-600 font-bold hover:underline">Connectez-vous</a>
+</div>
 </div>
 @endsection
