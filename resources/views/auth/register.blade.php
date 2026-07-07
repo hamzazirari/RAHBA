@@ -1,52 +1,99 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
+@extends('layouts.app')
+
+@section('title', 'Créer un compte - RAHBA')
+
+@section('content')
+<div class="max-w-md mx-auto my-12 bg-white p-8 rounded-2xl border border-slate-100 shadow-xs" 
+     x-data="{ role: '{{ old('role', 'client') }}' }">
+    
+    <div class="mb-6 text-center">
+        <h1 class="text-2xl font-black text-slate-900 tracking-tight">Rejoignez RAHBA</h1>
+        <p class="text-xs text-slate-400 mt-1">Créez votre compte en quelques secondes.</p>
+    </div>
+
+    <form method="POST" action="{{ route('register') }}" class="space-y-4">
         @csrf
 
-        <!-- Name -->
         <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Vous êtes ?</label>
+            <select name="role" x-model="role" required 
+                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:bg-white focus:border-amber-500 transition outline-hidden">
+                <option value="client">Acheteur (Client)</option>
+                <option value="vendor">Commerçant (Vendeur)</option>
+            </select>
+            @error('role')
+                <span class="text-xs text-rose-600 font-semibold mt-1 block">{{ $message }}</span>
+            @enderror
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Nom complet</label>
+            <input type="text" name="name" value="{{ old('name') }}" required
+                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-amber-500 transition outline-hidden">
+            @error('name')
+                <span class="text-xs text-rose-600 font-semibold mt-1 block">{{ $message }}</span>
+            @enderror
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Adresse Email</label>
+            <input type="email" name="email" value="{{ old('email') }}" required
+                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-amber-500 transition outline-hidden">
+            @error('email')
+                <span class="text-xs text-rose-600 font-semibold mt-1 block">{{ $message }}</span>
+            @enderror
         </div>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Numéro de téléphone</label>
+            <input type="tel" name="phone" value="{{ old('phone') }}" required placeholder="+212..."
+                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-amber-500 transition outline-hidden">
+            @error('phone')
+                <span class="text-xs text-rose-600 font-semibold mt-1 block">{{ $message }}</span>
+            @enderror
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
+        <div x-show="role === 'vendor'" x-transition class="space-y-4 pt-2 border-t border-slate-100">
+            <div>
+                <label class="block text-xs font-bold text-amber-700 uppercase mb-2">Nom de votre Boutique</label>
+                <input type="text" name="shop_name" value="{{ old('shop_name') }}" 
+                    x-bind:required="role === 'vendor'"
+                    placeholder="Ex: TechShop Safi"
+                    class="w-full px-4 py-3 bg-amber-50/50 border border-amber-200 rounded-xl text-sm focus:bg-white focus:border-amber-500 transition outline-hidden">
+                @error('shop_name')
+                    <span class="text-xs text-rose-600 font-semibold mt-1 block">{{ $message }}</span>
+                @enderror
+            </div>
 
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
+            <div>
+                <label class="block text-xs font-bold text-amber-700 uppercase mb-2">Description de la boutique</label>
+                <textarea name="shop_description" rows="3" 
+                    placeholder="Décrivez brièvement ce que vous vendez..."
+                    class="w-full px-4 py-3 bg-amber-50/50 border border-amber-200 rounded-xl text-sm focus:bg-white focus:border-amber-500 transition resize-none outline-hidden">{{ old('shop_description') }}</textarea>
+                @error('shop_description')
+                    <span class="text-xs text-rose-600 font-semibold mt-1 block">{{ $message }}</span>
+                @enderror
+            </div>
         </div>
+
+        <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Mot de passe</label>
+            <input type="password" name="password" required
+                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-amber-500 transition outline-hidden">
+            @error('password')
+                <span class="text-xs text-rose-600 font-semibold mt-1 block">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Confirmer le mot de passe</label>
+            <input type="password" name="password_confirmation" required
+                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-amber-500 transition outline-hidden">
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-sm transition shadow-xs cursor-pointer">
+            Créer mon compte
+        </button>
     </form>
-</x-guest-layout>
+</div>
+@endsection

@@ -27,6 +27,8 @@ return new class extends Migration
         $table->string('shop_name')->nullable();
         $table->text('shop_description')->nullable();
 
+        $table->boolean('is_active')->default(true);
+        
         $table->rememberToken();
         $table->timestamps();
     });

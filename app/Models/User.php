@@ -3,31 +3,35 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $fillable = [
         'name',
         'email',
         'password',
+        'phone',
+        'address',
+        'role',
+        'shop_name',
+        'shop_description',
+        'is_active',
     ];
 
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -44,6 +48,25 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
+    }
+
+    // 🏪 Un Vendeur (User avec le rôle 'vendor') possède plusieurs produits
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'user_id');
+    }
+
+    // 🛒 Un Client possède un Panier
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);
+    }
+
+    // 📦 Un Client peut passer plusieurs commandes
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }

@@ -28,24 +28,42 @@ class RegisteredUserController extends Controller
      *
      * @throws ValidationException
      */
-    public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+   public function store(Request $request): RedirectResponse
+{
+    $request->validate([
+        'name' => ['required', 'string', 'max:255'],
+        'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+        'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
+        'phone' => ['required', 'string', 'max:20'],
+        'role' => ['required', 'string', 'in:client,vendor'],
+        
+        // Les champs boutique sont obligatoires uniquement si le rôle sélectionné est 'vendor'
+        'shop_name' => ['required_if:role,vendor', 'nullable', 'string', 'max:255'],
+        'shop_description' => ['required_if:role,vendor', 'nullable', 'string'],
+    ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+        'phone' => $request->phone,
+        'role' => $request->role,
+        'is_active' => true, // Utilisateur actif par défaut selon ton diagramme
+        
+        // On n'enregistre la boutique que si c'est un vendeur
+        'shop_name' => $request->role === 'vendor' ? $request->shop_name : null,
+        'shop_description' => $request->role === 'vendor' ? $request->shop_description : null,
+    ]);
 
-        event(new Registered($user));
+    event(new \Illuminate\Auth\Events\Registered($user));
 
-        Auth::login($user);
+    \Illuminate\Support\Facades\Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+    // Redirection dynamique selon le rôle après l'inscription
+    if ($user->role === 'vendor') {
+        return redirect()->route('vendor.dashboard');
     }
+
+    return redirect()->route('home');
+}
 }
