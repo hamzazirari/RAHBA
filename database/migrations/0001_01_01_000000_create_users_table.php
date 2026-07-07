@@ -9,32 +9,28 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            
-            // Informations de base
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->string('name');
-            $table->string('phone')->nullable();
-            
-            // Rôle et statut
-            $table->enum('role', ['admin', 'client', 'vendor'])->default('client');
-            $table->boolean('is_active')->default(true);
-            
-            // Type polymorphe (pour supporter différents types d'utilisateurs)
-            $table->string('type')->nullable(); // 'admin', 'client', 'vendor'
-            
-            // Timestamps
-            $table->timestamps();
-            $table->softDeletes();
-            
-            
-        });
-    
+   public function up(): void
+{
+    Schema::create('users', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->string('email')->unique();
+        $table->timestamp('email_verified_at')->nullable();
+        $table->string('password');
+        
+        // Ajouts pour RAHBA Marketplace
+        $table->enum('role', ['admin', 'client', 'vendor'])->default('client');
+        $table->string('phone')->nullable();
+        $table->text('address')->nullable(); // Adresse par défaut pour le client
+        
+        // Champs spécifiques au vendeur (optionnels si rôle = client/admin)
+        $table->string('shop_name')->nullable();
+        $table->text('shop_description')->nullable();
+
+        $table->rememberToken();
+        $table->timestamps();
+    });
+
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
